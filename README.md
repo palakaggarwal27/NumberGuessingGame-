@@ -1,64 +1,93 @@
-Number Guessing Game on Flow EVM
-Contract Address: 0xe4e85836F57Bb9716B8218C35768222F4bB41b38
+**Number Guessing Game Smart Contract — Flow EVM**
 
-Overview
-This project is a simple and fun Number Guessing Game smart contract deployed on the Flow EVM. Players can try to guess a secret number to win a prize. The prize is immediately transferred to the winner’s wallet if the correct guess is made; otherwise, the game continues until someone wins.
+**Contract Address:**  
+`0xe4e85836F57Bb9716B8218C35768222F4bB41b38`
 
-Features
-Automated Prize Distribution: Winner receives the prize instantly on correct guess.
+***
 
-No External Imports or Constructors: The contract is lean and self-contained for easy deployment and auditing.
+**Overview**
 
-Owner Controls: Owner can initialize the game and reclaim unused prize funds if the game ends without a winner.
+This DApp is a simple, decentralized **Number Guessing Game** smart contract deployed on the Flow EVM. Players can guess a secret number on-chain for a chance to win an ETH prize. The contract features automated prize distribution upon a correct guess and owner controls for initialization and prize recovery.
 
-Transparent Gameplay: All actions (initialization, guesses, prize claims) are on-chain.
+***
 
-How It Works
-Game Initialization:
-The owner starts the game by calling initGame(uint256 _secretNumber) and sending the prize amount in ETH.
+**Features**
 
-Playing the Game:
+- **Automated Prize Payout:** Prize sent instantly to winner’s wallet on correct guess.
+- **No External Imports or Constructors:** Lean, self-contained contract for seamless deployment.
+- **Owner Controls:** Owner sets the secret number, prize, and may reclaim ETH if game ends without winner.
+- **Transparent Gameplay:** All interactions recorded on-chain.
 
-Anyone may call guess(uint256 _guess) with their guessed number.
+***
 
-If the guess matches the secret number, the smart contract transfers the prize to the winner’s wallet and ends the game.
+**How It Works**
 
-Prize Recovery:
-If the game finishes without a winner, the owner can reclaim leftover funds with reclaimPrize().
+- **Game Initialization**
+  - Owner starts the game by calling `initGame(uint256 _secretNumber)` and sending ETH as the prize.
+  - The game becomes active and awaits player guesses.
 
-Usage
-Deployment
-This contract is deployed on the Flow EVM at:
+- **Player Guessing**
+  - Any wallet may call `guess(uint256 _guess)` with their guess.
+  - If the guessed number matches the secret, the contract:
+    - Declares the caller as the winner.
+    - Transfers the entire prize balance to the winner.
+    - Ends the game.
 
-text
-0xe4e85836F57Bb9716B8218C35768222F4bB41b38
-Interface
-Methods
-initGame(uint256 _secretNumber)
-Call this method (by owner) to start a new game. Send prize ETH with this call.
+- **Prize Recovery**  
+  If nobody wins, owner can reclaim the unawarded ETH via `reclaimPrize()`.
 
-guess(uint256 _guess)
-Call this method with your guess.
+- **Contract Balance**  
+  Anyone can view the contract balance using `contractBalance()`.
 
-reclaimPrize()
-Called by owner to reclaim funds if no winner.
+***
 
-contractBalance()
-View current contract balance.
+**Usage Instructions**
 
-Example
-text
-// Initialize the game with a secret number and send ETH as prize:
-contract.initGame{value: 1 ether}(1234);
+1. **Initialize the Game (Owner Only)**
+    - Call:
+      ```solidity
+      initGame{value: <prize in wei>}(SECRET_NUMBER)
+      ```
+    - Example:
+      ```solidity
+      initGame{value: 1000000000000000000}(42) // 1 ETH prize, secret number 42
+      ```
 
-// Guess the number:
-contract.guess(1234); // If correct, prize transferred to caller
-Requirements
-Flow EVM wallet (e.g., MetaMask, Flow-compatible wallet)
+2. **Submit a Guess (Anyone)**
+    - Call:
+      ```solidity
+      guess(<your_guess>)
+      ```
+    - Example:
+      ```solidity
+      guess(42)
+      ```
 
-ETH for gas and prize payments
+3. **Reclaim Prize (Owner Only)**
+    - If the game is over and no winner, owner can call:
+      ```solidity
+      reclaimPrize()
+      ```
 
-License
+4. **Check Contract Balance**
+    - Call:
+      ```solidity
+      contractBalance()
+      ```
+
+***
+
+**Requirements**
+
+- **Flow EVM Wallet** (e.g., MetaMask, Flow-compatible wallet)
+- **ETH** for gas and prize deposit
+
+***
+
+**License**
+
 MIT
 
-Play, win, and enjoy!
+***
+
+**Enjoy playing the Number Guessing Game on Flow EVM!**  
